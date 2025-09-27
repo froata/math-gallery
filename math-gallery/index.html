@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Portfolio — Unit 1 (Parametrics • Polar • Conics)</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$'],['\\[','\\]']] },
+    svg:{ fontCache:'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+  :root{
+    --bg:#0b1220; --panel:#111a2e; --ink:#eaf0ff; --muted:#9fb0d4;
+    --border:rgba(122,162,255,.16); --border-soft:rgba(122,162,255,.10);
+    --chip:#0c1632; --accent:#7aa2ff; --good:#2bd4a7;
+  }
+
+  /* ===== Page layout / (fixed gradient) ===== */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    background:
+      radial-gradient(900px 600px at 15% 0%, rgba(122,162,255,.18), transparent 55%),
+      radial-gradient(800px 540px at 110% 15%, rgba(43,212,167,.16), transparent 60%),
+      linear-gradient(180deg,#0b1220 0%, #0c162d 50%, #0a1326 100%);
+    background-attachment: fixed; /* <- keeps the gradient stable while scrolling */
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    padding:22px 18px 12px;
+    backdrop-filter:saturate(120%) blur(8px);
+    background:linear-gradient(180deg, rgba(8,14,26,.9), rgba(8,14,26,.65));
+    border-bottom:1px solid var(--border);
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 18px}
+  .hero-title{margin:0; font-weight:800; letter-spacing:.2px}
+  .hero-sub{margin:.3rem 0 0; color:var(--muted)}
+  .tag{position:absolute; right:18px; top:18px; font-size:.78rem; color:#cfe0ff;
+    background:rgba(122,162,255,.14); border:1px solid var(--border); border-radius:999px; padding:6px 10px}
+  main{padding:26px 0 80px}
+  .card{
+    background:linear-gradient(180deg, rgba(17,26,46,.95), rgba(17,26,46,.88));
+    border:1px solid var(--border); border-radius:16px; padding:18px; margin:18px 0;
+    box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.02);
+  }
+  .muted{color:var(--muted)}
+  .chip{display:inline-flex; align-items:center; gap:.5ch; padding:4px 10px; border-radius:999px;
+    background:var(--chip); border:1px solid var(--border); color:#cfe0ff; font-size:.84rem; font-weight:650}
+  .two-col{display:grid; grid-template-columns:1.08fr .92fr; gap:18px}
+  @media (max-width:880px){.two-col{grid-template-columns:1fr}}
+  figure{margin:6px 0 2px}
+  img{width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border-soft)}
+  figcaption{color:var(--muted); font-size:.9rem; margin-top:6px}
+
+  /* Problem blocks */
+  details.problem{border:1px solid var(--border); border-radius:14px; overflow:hidden; margin:14px 0}
+  details.problem[open]{background:linear-gradient(180deg, rgba(15,26,51,.65), rgba(15,26,51,.45))}
+  details.problem > summary{
+    list-style:none; cursor:pointer; padding:12px 14px; font-weight:800;
+    background:linear-gradient(180deg, rgba(18,27,52,.92), rgba(18,27,52,.72));
+    border-bottom:1px solid var(--border);
+  }
+  details.problem > summary::-webkit-details-marker{display:none}
+  details.problem .content{padding:12px 14px}
+
+  /* Steps */
+  ol.steps{counter-reset:step; margin:.4rem 0 .2rem 0; padding:0; display:grid; gap:10px}
+  ol.steps > li{
+    list-style:none; padding:10px 12px; border:1px dashed var(--border);
+    border-radius:10px; background:rgba(255,255,255,.02); position:relative
+  }
+  ol.steps > li::before{
+    counter-increment:step; content:"Step " counter(step);
+    position:absolute; top:-10px; left:10px; font-size:.72rem; color:#a7b8dc;
+    background:#0b1220; padding:0 6px; border-radius:6px; border:1px solid var(--border);
+  }
+  .answer{
+    display:inline-block; padding:.12rem .5rem; border-radius:8px; border:1px solid var(--good);
+    color:#dffbef; background:rgba(43,212,167,.10); font-weight:800
+  }
+  .tiny{font-size:.9rem}
+
+  /* Mini gallery */
+  .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+  @media (max-width:820px){.mini-grid{grid-template-columns:1fr}}
+  .mini{
+    background:linear-gradient(180deg, rgba(16,26,50,.66), rgba(16,26,50,.5));
+    border:1px solid var(--border); border-radius:12px; padding:12px
+  }
+  .mini h5{margin:0 0 6px; font-size:1rem}
+  .mini p{margin:0; color:var(--muted)}
+  .sep{border:none; border-top:1px dashed var(--border); margin:12px 0}
+
+  /* ===== Click-to-zoom (simple & reliable) ===== */
+  img.zoomable{cursor: zoom-in}
+  .lightbox{
+    position:fixed; inset:0; z-index:9999; display:none;
+    align-items:center; justify-content:center;
+    background:rgba(0,0,0,.86);
+  }
+  .lightbox.show{display:flex}
+  .lightbox img{
+    width:100vw; height:100vh; object-fit:contain;
+    border:1px solid rgba(255,255,255,.2); border-radius:6px;
+    cursor:zoom-out;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h2 class="hero-title">My Portfolio — Unit 1</h2>
+      <p class="hero-sub">Parametrics • Polar • Conic Sections</p>
+      <p class="hero-sub" style="margin-top:.35rem; font-weight:700; letter-spacing:.3px">
+        by Robert Bobocea
+      </p>
+    </div>
+    <div class="tag">MathJax ready</div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- PURPOSE -->
+    <section class="card">
+      <h3>Purpose of the Portfolio</h3>
+      <p>
+        This page shows what I <em>understand</em>—not just answers. Each unit has a clear
+        <strong>Content &amp; Understanding</strong> section and an honest <strong>Reflection</strong>.
+        I include math notation, reasoning steps, and images of work.
+      </p>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="card">
+      <h3>Unit 1 — Content &amp; Understanding</h3>
+      <p class="muted">
+        Parametrics let us describe motion/paths via \(x(t),y(t)\). In polar, \(r(\theta)\) makes area/length compact for radially
+        symmetric curves. Conics unify in polar using eccentricity \(e\).
+      </p>
+
+      <!-- PROBLEM 1 -->
+      <details class="problem" open>
+        <summary>Problem 1 — Parametric: area and arc length of a cycloid arch</summary>
+        <div class="content two-col">
+          <div>
+            <p><span class="chip">Given</span> A rolling circle of radius \(r\) with a marked rim point generates
+              \(x=r(t-\sin t)\), \(y=r(1-\cos t)\), \(0\le t\le2\pi\).</p>
+            <p><span class="chip">Find</span> (a) the area under one arch, (b) the length of that arch.</p>
+
+            <ol class="steps">
+              <li>
+                <strong>Area formula (parametric).</strong>
+                \[
+                  A=\int y\,dx=\int_{0}^{2\pi}y(t)\,x'(t)\,dt
+                \]
+                Here \(y=r(1-\cos t)\), \(x'=r(1-\cos t)\).
+              </li>
+              <li>
+                <strong>Compute \(A\).</strong>
+                \[
+                  A=r^2\!\int_{0}^{2\pi}(1-\cos t)^2\,dt
+                  = \boxed{3\pi r^2}
+                \]
+              </li>
+              <li>
+                <strong>Arc length (parametric).</strong>
+                \[
+                  L=\int_{0}^{2\pi}\!\sqrt{(x')^2+(y')^2}\,dt,\quad
+                  x'=r(1-\cos t),\ y'=r\sin t.
+                \]
+              </li>
+              <li>
+                <strong>Compute \(L\).</strong>
+                \[
+                  L=r\!\int_{0}^{2\pi}2\Big|\sin\frac t2\Big|\,dt
+                  = \boxed{8r}.
+                \]
+              </li>
+            </ol>
+            <p class="tiny muted">Formulas used: \(A=\int g(t)f'(t)\,dt\), \(L=\int\!\sqrt{(x')^2+(y')^2}\,dt\).</p>
+          </div>
+
+          <div>
+            <figure>
+              <img src="img/cycloid_parametric.png" alt="Cycloid arch with cusps (t=0,2π) and horizontal tangent (t=π)" />
+              <figcaption>Cycloid arch. Cusps at \(t=0,2\pi\); horizontal tangent at \(t=\pi\).</figcaption>
+            </figure>
+            <figure>
+              <img src="img/cycloid_curve.png" alt="Cycloid curve segment" />
+              <figcaption>Another view of the same arch parameterization.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </details>
+
+      <!-- PROBLEM 2 -->
+      <details class="problem">
+        <summary>Problem 2 — Polar: total area of the cardioid \(r=1+\sin\theta\)</summary>
+        <div class="content two-col">
+          <div>
+            <p><span class="chip">Given</span> \(r(\theta)=1+\sin\theta\), \(0\le\theta\le2\pi\).</p>
+            <p><span class="chip">Find</span> the total area enclosed by the curve.</p>
+
+            <ol class="steps">
+              <li><strong>Polar area.</strong> \(\displaystyle A=\frac12\int_{0}^{2\pi}(1+\sin\theta)^2\,d\theta\).</li>
+              <li><strong>Evaluate.</strong> \(\displaystyle A=\boxed{\tfrac{3\pi}{2}}\approx 4.7124\).</li>
+            </ol>
+          </div>
+
+          <div>
+            <figure>
+              <img src="img/cardioid_area.png" alt="Cardioid r=1+sinθ, interior shaded" />
+              <figcaption>Cardioid area setup with bounds \(0\le\theta\le2\pi\).</figcaption>
+            </figure>
+            <figure>
+              <img src="img/cardioid_polar.png" alt="Cardioid on polar grid with key points" />
+              <figcaption>Cardioid on a polar grid (key points labeled).</figcaption>
+            </figure>
+            <figure>
+              <img src="img/cardioid_length.png" alt="Cardioid arc-length setup" />
+              <figcaption>Arc-length ingredients (for reference).</figcaption>
+            </figure>
+          </div>
+        </div>
+      </details>
+
+      <!-- PROBLEM 3 -->
+      <details class="problem">
+        <summary>Problem 3 — Conic in polar: identify type, eccentricity, and directrix</summary>
+        <div class="content two-col">
+          <div>
+            <p><span class="chip">Given</span> \( \displaystyle r=\frac{10}{3-2\cos\theta} \).</p>
+            <p><span class="chip">Find</span> the eccentricity \(e\), the directrix, and the conic type.</p>
+
+            <ol class="steps">
+              <li>
+                <strong>Match to standard.</strong>
+                \(\displaystyle r=\frac{ed}{1-e\cos\theta}=\frac{\tfrac{10}{3}}{1-\tfrac{2}{3}\cos\theta}\Rightarrow e=\tfrac23,\ d=5.\)
+              </li>
+              <li>
+                <strong>Classify.</strong> \(e=\tfrac23<1\Rightarrow\) <span class="answer">ellipse</span>;
+                since it’s \(1-e\cos\theta\), the directrix is \(x=+d=\boxed{5}\).
+              </li>
+            </ol>
+          </div>
+          <div>
+            <figure>
+              <img src="img/ellipse_orbit.png" alt="Polar ellipse with focus at the pole" />
+              <figcaption>Ellipse in polar (focus at pole) with illustrative directrix.</figcaption>
+            </figure>
+            <figure>
+              <img src="img/hyperbola_branches.png" alt="Hyperbola branches example" />
+              <figcaption>Reference: hyperbola branches (contrast to ellipse case).</figcaption>
+            </figure>
+          </div>
+        </div>
+      </details>
+
+      <hr class="sep">
+
+      <!-- MINI GALLERY -->
+      <section aria-label="Quick gallery" class="mini-grid">
+        <div class="mini">
+          <h5>Parametric parabola</h5>
+          <p>\(x=t,\ y=t^2\) (sample segment).</p>
+          <figure style="margin-top:8px">
+            <img src="img/parametric_parabola.png" alt="Parametric parabola segment" />
+          </figure>
+        </div>
+        <div class="mini">
+          <h5>Parabola (focus & directrix)</h5>
+          <p>Geometry view showing focus/directrix idea.</p>
+          <figure style="margin-top:8px">
+            <img src="img/parabola_directrix_focus.png" alt="Parabola with focus and directrix" />
+          </figure>
+        </div>
+        <div class="mini">
+          <h5>Parabola (full)</h5>
+          <p>Cartesian sketch with labeled points.</p>
+          <figure style="margin-top:8px">
+            <img src="img/parabola_full.png" alt="Full parabola reference" />
+          </figure>
+        </div>
+      </section>
+    </section>
+
+    <!-- REFLECTION (single paragraph) -->
+    <section class="card">
+      <h3>Unit 1 — Reflection</h3>
+      <p>
+        This unit clicked when I started reading slope in parametrics as “vertical velocity over horizontal velocity,”
+        \( (dy/dt)/(dx/dt) \); it made tangent lines feel natural instead of memorized. I’m proud of how I structured
+        the cycloid and cardioid write-ups: clear bounds → correct formula (area or length) → careful evaluation with
+        the algebra shown, so each answer is traceable. The biggest challenge was choosing polar bounds without
+        accidentally doubling petals or area; checking sign changes of \(r(\theta)\) and sketching quick mini-plots
+        helped. I’ve grown at switching among Cartesian, parametric, and polar descriptions and, more importantly,
+        at writing what each symbol means before I compute. My next goal is process-based: start homework the same day
+        and finish with a three-bullet “big ideas” recap so I can ask sharper questions in the next class.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div id="lb" class="lightbox" aria-hidden="true" role="dialog">
+    <img alt="">
+  </div>
+
+  <script>
+    // mark all images zoomable
+    document.querySelectorAll('main img').forEach(img => img.classList.add('zoomable'));
+
+    const lb = document.getElementById('lb');
+    const lbImg = lb.querySelector('img');
+
+    function openLB(src, alt){
+      lbImg.src = src; lbImg.alt = alt || '';
+      lb.classList.add('show');
+      lb.setAttribute('aria-hidden','false');
+      // try fullscreen for a true "maximized" feel (falls back gracefully)
+      if (lb.requestFullscreen) lb.requestFullscreen().catch(()=>{});
+      document.documentElement.style.overflow='hidden';
+    }
+    function closeLB(){
+      lb.classList.remove('show');
+      lb.setAttribute('aria-hidden','true');
+      lbImg.src = '';
+      if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+      document.documentElement.style.overflow='';
+    }
+
+    // open on any image click
+    document.addEventListener('click', (e)=>{
+      const img = e.target.closest('img.zoomable');
+      if (!img) return;
+      openLB(img.currentSrc || img.src, img.alt);
+    });
+
+    // close on dark edge click
+    lb.addEventListener('click', (e)=>{ if (e.target === lb) closeLB(); });
+
+    // close on ESC
+    document.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && lb.classList.contains('show')) closeLB(); });
+  </script>
+</body>
+</html>
