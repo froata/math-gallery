@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<!-- MathJax -->
 <script>
   window.MathJax = {
     tex:{ inlineMath:[['$','$'],['\\(','\\)']], displayMath:[['$$','$$'],['\\[','\\]']] },
@@ -21,7 +20,6 @@
     --chip:#0c1632; --accent:#7aa2ff; --good:#2bd4a7;
   }
 
-  /* ===== Page layout / (fixed gradient) ===== */
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
@@ -31,7 +29,7 @@
       radial-gradient(900px 600px at 15% 0%, rgba(122,162,255,.18), transparent 55%),
       radial-gradient(800px 540px at 110% 15%, rgba(43,212,167,.16), transparent 60%),
       linear-gradient(180deg,#0b1220 0%, #0c162d 50%, #0a1326 100%);
-    background-attachment: fixed; /* <- keeps the gradient stable while scrolling */
+    background-attachment: fixed; 
   }
   header{
     position:sticky; top:0; z-index:10;
@@ -60,7 +58,6 @@
   img{width:100%; height:auto; display:block; border-radius:12px; border:1px solid var(--border-soft)}
   figcaption{color:var(--muted); font-size:.9rem; margin-top:6px}
 
-  /* Problem blocks */
   details.problem{border:1px solid var(--border); border-radius:14px; overflow:hidden; margin:14px 0}
   details.problem[open]{background:linear-gradient(180deg, rgba(15,26,51,.65), rgba(15,26,51,.45))}
   details.problem > summary{
@@ -71,7 +68,6 @@
   details.problem > summary::-webkit-details-marker{display:none}
   details.problem .content{padding:12px 14px}
 
-  /* Steps */
   ol.steps{counter-reset:step; margin:.4rem 0 .2rem 0; padding:0; display:grid; gap:10px}
   ol.steps > li{
     list-style:none; padding:10px 12px; border:1px dashed var(--border);
@@ -88,7 +84,6 @@
   }
   .tiny{font-size:.9rem}
 
-  /* Mini gallery */
   .mini-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
   @media (max-width:820px){.mini-grid{grid-template-columns:1fr}}
   .mini{
@@ -99,7 +94,6 @@
   .mini p{margin:0; color:var(--muted)}
   .sep{border:none; border-top:1px dashed var(--border); margin:12px 0}
 
-  /* ===== Click-to-zoom (simple & reliable) ===== */
   img.zoomable{cursor: zoom-in}
   .lightbox{
     position:fixed; inset:0; z-index:9999; display:none;
@@ -127,7 +121,6 @@
 
   <main class="wrap">
 
-    <!-- PURPOSE -->
     <section class="card">
       <h3>Purpose of the Portfolio</h3>
       <p>
@@ -137,7 +130,6 @@
       </p>
     </section>
 
-    <!-- CONTENT -->
     <section class="card">
       <h3>Unit 1 — Content &amp; Understanding</h3>
       <p class="muted">
@@ -145,7 +137,6 @@
         symmetric curves. Conics unify in polar using eccentricity \(e\).
       </p>
 
-      <!-- PROBLEM 1 -->
       <details class="problem" open>
         <summary>Problem 1 — Parametric: area and arc length of a cycloid arch</summary>
         <div class="content two-col">
@@ -200,7 +191,6 @@
         </div>
       </details>
 
-      <!-- PROBLEM 2 -->
       <details class="problem">
         <summary>Problem 2 — Polar: total area of the cardioid \(r=1+\sin\theta\)</summary>
         <div class="content two-col">
@@ -231,7 +221,6 @@
         </div>
       </details>
 
-      <!-- PROBLEM 3 -->
       <details class="problem">
         <summary>Problem 3 — Conic in polar: identify type, eccentricity, and directrix</summary>
         <div class="content two-col">
@@ -265,7 +254,6 @@
 
       <hr class="sep">
 
-      <!-- MINI GALLERY -->
       <section aria-label="Quick gallery" class="mini-grid">
         <div class="mini">
           <h5>Parametric parabola</h5>
@@ -291,7 +279,6 @@
       </section>
     </section>
 
-    <!-- REFLECTION (single paragraph) -->
     <section class="card">
       <h3>Unit 1 — Reflection</h3>
       <h3>1. What were your “aha” moments?</h3>
@@ -318,24 +305,20 @@
       variables just as X and Y function in relation between each other.
 
       <h3>5. How did you do in working towards your goal from the previous unit?</h3>>
+      My next goal is to start homework the same day and take notes with 3 things to review so I can have a faster progession into the 
+      next lesson, by sharpening my skills of the previous lessons.
       
-      
-      <p>
-        This unit clicked when I started looking at slope  as “vertical velocity over horizontal velocity,”
-        \( (dy/dt)/(dx/dt) \); it made tangent lines feel natural instead of memorizing equations.    My next goal is: start homework the same day
-        and have bullets with 3 things to review so I can ask better questions in the next class.
+        
       </p>
     </section>
 
   </main>
 
-  <!-- LIGHTBOX -->
   <div id="lb" class="lightbox" aria-hidden="true" role="dialog">
     <img alt="">
   </div>
 
   <script>
-    // mark all images zoomable
     document.querySelectorAll('main img').forEach(img => img.classList.add('zoomable'));
 
     const lb = document.getElementById('lb');
@@ -345,7 +328,6 @@
       lbImg.src = src; lbImg.alt = alt || '';
       lb.classList.add('show');
       lb.setAttribute('aria-hidden','false');
-      // try fullscreen for a true "maximized" feel (falls back gracefully)
       if (lb.requestFullscreen) lb.requestFullscreen().catch(()=>{});
       document.documentElement.style.overflow='hidden';
     }
@@ -357,17 +339,14 @@
       document.documentElement.style.overflow='';
     }
 
-    // open on any image click
     document.addEventListener('click', (e)=>{
       const img = e.target.closest('img.zoomable');
       if (!img) return;
       openLB(img.currentSrc || img.src, img.alt);
     });
 
-    // close on dark edge click
     lb.addEventListener('click', (e)=>{ if (e.target === lb) closeLB(); });
 
-    // close on ESC
     document.addEventListener('keydown', (e)=>{ if (e.key==='Escape' && lb.classList.contains('show')) closeLB(); });
   </script>
 </body>
